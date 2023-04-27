@@ -1,14 +1,3 @@
-# kysely-ydb
-
-Kysely dialects, plugins and other goodies for [YDB](https://ydb.tech/)
-
-## Disclaimer
-This repo is currently WIP (Work in process) and thus is not production ready.
-
-For now on, it only provides capabilities of basic select queries against YDB and does not support some dialect-specific expressions.
-
-## Example usage
-```
 import { Kysely } from 'kysely';
 import {Driver, getSACredentialsFromJson, IamAuthService} from 'ydb-sdk';
 
@@ -50,5 +39,3 @@ export async function run() {
 }
 
 run()
-
-```
