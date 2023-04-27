@@ -7,6 +7,11 @@ This repo is currently WIP (Work in process) and thus is not production ready.
 
 For now on, it only provides capabilities of basic select queries against YDB and does not support some dialect-specific expressions.
 
+## Instalation 
+```
+npm i kysely-ydb
+```
+
 ## Example usage
 ```
 import { Kysely } from 'kysely';
