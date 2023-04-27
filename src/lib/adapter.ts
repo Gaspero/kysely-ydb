@@ -1,12 +1,12 @@
-import { DialectAdapterBase, Kysely } from 'kysely'
+import { DialectAdapterBase, Kysely } from 'kysely';
 
 export class YdbAdapter extends DialectAdapterBase {
   get supportsTransactionalDdl(): boolean {
-    return false
+    return false;
   }
 
   get supportsReturning(): boolean {
-    return false
+    return false;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
