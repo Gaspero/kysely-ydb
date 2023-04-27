@@ -8,6 +8,8 @@
   "repository": "https://github.com/Gaspero/kysely-ydb",
   "license": "MIT",
   "keywords": [],
+  "author": "Ivan Shadrin",
+  "private": false,
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
