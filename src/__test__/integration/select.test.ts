@@ -99,6 +99,22 @@ describe('Select', () => {
     ]);
   });
 
+  test('Select all with limit', async () => {
+    const data = await db.selectFrom('series').selectAll().limit(1).execute();
+
+    expect(data).toEqual([
+      {
+        series_id: 1,
+        title: 'IT Crowd',
+        release_date: new Date('2006-02-03'),
+        series_info:
+          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by ' +
+          "Ash Atalla and starring Chris O'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.",
+        is_closed: true,
+      }
+    ]);
+  });
+
   test('Select one', async () => {
     const data = await db
       .selectFrom('series')
