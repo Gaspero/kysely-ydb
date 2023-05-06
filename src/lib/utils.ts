@@ -34,3 +34,15 @@ export function isObject(obj: unknown): obj is Record<string, unknown> {
 export function isString(obj: unknown): obj is string {
   return typeof obj === 'string';
 }
+
+export function isNumber(obj: unknown): obj is number {
+  return typeof obj === 'number';
+}
+
+export function isBoolean(obj: unknown): obj is boolean {
+  return typeof obj === 'boolean';
+}
+
+export function isDate(obj: unknown): obj is Date {
+  return obj instanceof Date;
+}

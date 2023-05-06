@@ -2,16 +2,17 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": { "project": "./tsconfig.json" },
-  "env": { "es6": true },
+  "env": { "es6": true, "jest/globals": true },
   "ignorePatterns": ["node_modules", "build", "coverage"],
-  "plugins": ["import", "eslint-comments", "functional"],
+  "plugins": ["import", "eslint-comments", "jest"],
   "extends": [
     "eslint:recommended",
     "plugin:eslint-comments/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/typescript",
     "prettier",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:jest/recommended"
   ],
   "globals": { "BigInt": true, "console": true, "WebAssembly": true },
   "rules": {

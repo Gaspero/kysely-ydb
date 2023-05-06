@@ -8,7 +8,7 @@ import {
 } from 'ydb-sdk';
 
 export type IQueryParams = {
-  readonly [k: string]: Ydb.ITypedValue;
+  [k: string]: Ydb.ITypedValue;
 };
 
 const querySettings = new ExecuteQuerySettings().withKeepInCache(true);
