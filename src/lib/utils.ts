@@ -1,3 +1,5 @@
+import { type Ydb } from 'ydb-sdk';
+
 export function extendStackTrace(err: unknown, stackError: Error): unknown {
   if (isStackHolder(err) && stackError.stack) {
     // Remove the first line that just says `Error`.
@@ -45,4 +47,11 @@ export function isBoolean(obj: unknown): obj is boolean {
 
 export function isDate(obj: unknown): obj is Date {
   return obj instanceof Date;
+}
+
+export function isTypedValue(obj: unknown): obj is Ydb.ITypedValue {
+  return (
+    Object.prototype.hasOwnProperty.call(obj, 'type') &&
+    Object.prototype.hasOwnProperty.call(obj, 'value')
+  );
 }

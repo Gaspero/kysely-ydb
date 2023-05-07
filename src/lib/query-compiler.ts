@@ -1,7 +1,7 @@
 import { DefaultQueryCompiler } from 'kysely';
 import { TypedValues } from 'ydb-sdk';
 
-import { isBoolean, isDate, isNumber, isString } from './utils';
+import { isBoolean, isDate, isNumber, isString, isTypedValue } from './utils';
 
 export class YdbQueryCompiler extends DefaultQueryCompiler {
   protected override getLeftIdentifierWrapper(): string {
@@ -17,7 +17,9 @@ export class YdbQueryCompiler extends DefaultQueryCompiler {
   }
 
   protected override appendValue(parameter: unknown): void {
-    if (isString(parameter)) {
+    if (isTypedValue(parameter)) {
+      this.addParameter(parameter);
+    } else if (isString(parameter)) {
       this.addParameter(TypedValues.utf8(parameter));
     } else if (isNumber(parameter)) {
       this.addParameter(TypedValues.uint32(parameter));
@@ -25,6 +27,8 @@ export class YdbQueryCompiler extends DefaultQueryCompiler {
       this.addParameter(TypedValues.bool(parameter));
     } else if (isDate(parameter)) {
       this.addParameter(TypedValues.timestamp(parameter));
+    } else {
+      throw new Error('Could not guess parameter type');
     }
 
     this.append(this.getCurrentParameterPlaceholder());

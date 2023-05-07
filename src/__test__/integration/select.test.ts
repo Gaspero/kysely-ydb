@@ -8,9 +8,10 @@ import {
   test,
 } from '@jest/globals';
 import { Kysely } from 'kysely';
-import { Driver } from 'ydb-sdk';
+import { Driver, TypedValues } from 'ydb-sdk';
 
 import { YdbDialect } from '../../lib/dialect';
+import { typedParam } from '../../lib/helpers';
 import {
   clearDatabase,
   Database,
@@ -111,7 +112,7 @@ describe('Select', () => {
           'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by ' +
           "Ash Atalla and starring Chris O'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.",
         is_closed: true,
-      }
+      },
     ]);
   });
 
@@ -120,6 +121,20 @@ describe('Select', () => {
       .selectFrom('series')
       .select(['series_id', 'title', 'release_date'])
       .where('series_id', '=', 1)
+      .executeTakeFirst();
+
+    expect(data).toEqual({
+      series_id: 1,
+      title: 'IT Crowd',
+      release_date: new Date('2006-02-03'),
+    });
+  });
+
+  test('Select one with typed parameter', async () => {
+    const data = await db
+      .selectFrom('series')
+      .select(['series_id', 'title', 'release_date'])
+      .where('series_id', '=', typedParam(TypedValues.uint32(1)))
       .executeTakeFirst();
 
     expect(data).toEqual({
