@@ -1,39 +1,51 @@
-import {
+import type {
   DatabaseIntrospector,
   Dialect,
   DialectAdapter,
   Driver,
   Kysely,
   QueryCompiler,
-} from 'kysely';
+} from 'kysely'
 
-import { YdbAdapter } from './adapter';
-import { YdbDialectConfig } from './dialect-config';
-import { YdbDriver } from './driver';
-import { YdbIntrospector } from './introspector';
-import { YdbQueryCompiler } from './query-compiler';
+import type { YdbDialectConfig } from './dialect-config'
+import { YdbAdapter } from './adapter'
+import { YdbDriver } from './driver'
+import { YdbIntrospector } from './introspector'
+import { YdbQueryCompiler } from './query-compiler'
 
+/**
+ * YDB dialect which uses the [ydb-js-sdk](https://github.com/ydb-platform/ydb-js-sdk/tree/main) library.
+ *
+ * The constructor takes an instance of {@link YdbDialectConfig}.
+ *
+ * ```ts
+ * import { Driver } from '@ydbjs/core'
+ *
+ * new YdbDialect({
+ *   driver: new Driver(...)
+ * })
+ * ```
+ */
 export class YdbDialect implements Dialect {
-  readonly #config: YdbDialectConfig;
+  readonly #config: YdbDialectConfig
 
   constructor(config: YdbDialectConfig) {
-    this.#config = config;
+    this.#config = config
   }
 
   createDriver(): Driver {
-    return new YdbDriver(this.#config);
+    return new YdbDriver(this.#config)
   }
 
   createQueryCompiler(): QueryCompiler {
-    return new YdbQueryCompiler();
+    return new YdbQueryCompiler()
   }
 
   createAdapter(): DialectAdapter {
-    return new YdbAdapter();
+    return new YdbAdapter()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createIntrospector(_db: Kysely<unknown>): DatabaseIntrospector {
-    return new YdbIntrospector();
+    return new YdbIntrospector()
   }
 }
