@@ -111,6 +111,6 @@ class YdbConnection implements DatabaseConnection {
   }
 
   async* streamQuery<R>(): AsyncIterableIterator<QueryResult<R>> {
-    throw new Error('YDB driver doesn\'t support streaming')
+    throw new Error('Method not implemented.')
   }
 }
