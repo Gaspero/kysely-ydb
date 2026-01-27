@@ -1,20 +1,20 @@
-import { DialectAdapterBase, Kysely } from 'kysely';
+import type { Kysely, MigrationLockOptions } from 'kysely'
+import { DialectAdapterBase } from 'kysely'
 
 export class YdbAdapter extends DialectAdapterBase {
   get supportsTransactionalDdl(): boolean {
-    return false;
+    return false
   }
 
   get supportsReturning(): boolean {
-    return false;
+    return false
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async acquireMigrationLock(_db: Kysely<unknown>): Promise<void> {
-    // not implemented
+  acquireMigrationLock(_db: Kysely<any>, _options: MigrationLockOptions): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 
-  async releaseMigrationLock(): Promise<void> {
-    // not implemented
+  releaseMigrationLock(_db: Kysely<any>, _options: MigrationLockOptions): Promise<void> {
+    throw new Error('Method not implemented.')
   }
 }

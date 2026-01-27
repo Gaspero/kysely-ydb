@@ -1,3 +1,9 @@
+import type {
+  Database,
+} from './utils'
+import { Driver } from '@ydbjs/core'
+import { Kysely } from 'kysely'
+
 import {
   afterAll,
   afterEach,
@@ -5,49 +11,45 @@ import {
   beforeEach,
   describe,
   expect,
-  test,
-} from '@jest/globals';
-import { Kysely } from 'kysely';
-import { Driver, TypedValues } from 'ydb-sdk';
-
-import { YdbDialect } from '../../lib/dialect';
-import { typedParam } from '../../lib/helpers';
+  it,
+} from 'vitest'
+import { YdbDialect } from '../lib/dialect'
 import {
   clearDatabase,
-  Database,
   destroyTest,
   driverSettings,
   initTest,
   insertDefaultDataSet,
-} from '../../test-utils';
+  YDB_ENDPOINT,
+} from './utils'
 
-const driver = new Driver(driverSettings);
+const driver = new Driver(YDB_ENDPOINT, driverSettings)
 
 beforeAll(async () => {
-  await initTest(driver);
-});
+  await initTest(driver)
+})
 
 beforeEach(async () => {
-  await insertDefaultDataSet(driver);
-});
+  await insertDefaultDataSet(driver)
+})
 
 afterEach(async () => {
-  await clearDatabase(driver);
-});
+  await clearDatabase(driver)
+})
 
 afterAll(async () => {
-  await destroyTest(driver);
-});
+  await destroyTest(driver)
+})
 
-describe('Select', () => {
+describe('select', () => {
   const db = new Kysely<Database>({
     dialect: new YdbDialect({
-      driver: driver,
+      driver,
     }),
-  });
+  })
 
-  test('Select all', async () => {
-    const data = await db.selectFrom('series').selectAll().execute();
+  it('select all', async () => {
+    const data = await db.selectFrom('series').selectAll().execute()
 
     expect(data).toEqual([
       {
@@ -55,8 +57,8 @@ describe('Select', () => {
         title: 'IT Crowd',
         release_date: new Date('2006-02-03'),
         series_info:
-          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by ' +
-          "Ash Atalla and starring Chris O'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.",
+          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by '
+          + 'Ash Atalla and starring Chris O\'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.',
         is_closed: true,
       },
       {
@@ -64,19 +66,19 @@ describe('Select', () => {
         title: 'Silicon Valley',
         release_date: new Date('2014-04-06'),
         series_info:
-          'Silicon Valley is an American comedy television series created by Mike Judge, John Altschuler and ' +
-          'Dave Krinsky. The series focuses on five young men who founded a startup company in Silicon Valley.',
+          'Silicon Valley is an American comedy television series created by Mike Judge, John Altschuler and '
+          + 'Dave Krinsky. The series focuses on five young men who founded a startup company in Silicon Valley.',
         is_closed: true,
       },
-    ]);
-  });
+    ])
+  })
 
-  test('Select all with order by', async () => {
+  it('select all with order by', async () => {
     const data = await db
       .selectFrom('series')
       .selectAll()
       .orderBy('series_id', 'desc')
-      .execute();
+      .execute()
 
     expect(data).toEqual([
       {
@@ -84,8 +86,8 @@ describe('Select', () => {
         title: 'Silicon Valley',
         release_date: new Date('2014-04-06'),
         series_info:
-          'Silicon Valley is an American comedy television series created by Mike Judge, John Altschuler and ' +
-          'Dave Krinsky. The series focuses on five young men who founded a startup company in Silicon Valley.',
+          'Silicon Valley is an American comedy television series created by Mike Judge, John Altschuler and '
+          + 'Dave Krinsky. The series focuses on five young men who founded a startup company in Silicon Valley.',
         is_closed: true,
       },
       {
@@ -93,15 +95,15 @@ describe('Select', () => {
         title: 'IT Crowd',
         release_date: new Date('2006-02-03'),
         series_info:
-          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by ' +
-          "Ash Atalla and starring Chris O'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.",
+          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by '
+          + 'Ash Atalla and starring Chris O\'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.',
         is_closed: true,
       },
-    ]);
-  });
+    ])
+  })
 
-  test('Select all with limit', async () => {
-    const data = await db.selectFrom('series').selectAll().limit(1).execute();
+  it('select all with limit', async () => {
+    const data = await db.selectFrom('series').selectAll().limit(1).execute()
 
     expect(data).toEqual([
       {
@@ -109,42 +111,28 @@ describe('Select', () => {
         title: 'IT Crowd',
         release_date: new Date('2006-02-03'),
         series_info:
-          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by ' +
-          "Ash Atalla and starring Chris O'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.",
+          'The IT Crowd is a British sitcom produced by Channel 4, written by Graham Linehan, produced by '
+          + 'Ash Atalla and starring Chris O\'Dowd, Richard Ayoade, Katherine Parkinson, and Matt Berry.',
         is_closed: true,
       },
-    ]);
-  });
+    ])
+  })
 
-  test('Select one', async () => {
+  it('select one', async () => {
     const data = await db
       .selectFrom('series')
       .select(['series_id', 'title', 'release_date'])
       .where('series_id', '=', 1)
-      .executeTakeFirst();
+      .executeTakeFirst()
 
     expect(data).toEqual({
       series_id: 1,
       title: 'IT Crowd',
       release_date: new Date('2006-02-03'),
-    });
-  });
+    })
+  })
 
-  test('Select one with typed parameter', async () => {
-    const data = await db
-      .selectFrom('series')
-      .select(['series_id', 'title', 'release_date'])
-      .where('series_id', '=', typedParam(TypedValues.uint32(1)))
-      .executeTakeFirst();
-
-    expect(data).toEqual({
-      series_id: 1,
-      title: 'IT Crowd',
-      release_date: new Date('2006-02-03'),
-    });
-  });
-
-  test('Select with join', async () => {
+  it('select with join', async () => {
     const data = await db
       .selectFrom('series')
       .innerJoin('seasons', 'seasons.series_id', 'series.series_id')
@@ -156,7 +144,7 @@ describe('Select', () => {
         'seasons.title as season_title',
       ])
       .where('series.series_id', '=', 1)
-      .execute();
+      .execute()
 
     expect(data).toEqual([
       {
@@ -187,6 +175,6 @@ describe('Select', () => {
         season_id: 4,
         season_title: 'Season 4',
       },
-    ]);
-  });
-});
+    ])
+  })
+})

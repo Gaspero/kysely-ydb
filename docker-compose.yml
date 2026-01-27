@@ -1,18 +1,19 @@
 version: '3'
 services:
-    yc:
-        image: 'cr.yandex/yc/yandex-docker-local-ydb:latest'
-        container_name: ydb-local
-        hostname: localhost
-        ports:
-            - 2135:2135
-            - 8765:8765
-            - 2136:2136
-        volumes:
-            - ./ydb_certs:/ydb_certs
-            - ./ydb_data:/ydb_data
-        environment:
-            - YDB_DEFAULT_LOG_LEVEL=NOTICE
-            - GRPC_TLS_PORT=2135
-            - GRPC_PORT=2136
-            - MON_PORT=8765
+  yc:
+    image: 'ydbplatform/local-ydb:latest'
+    container_name: ydb-local
+    hostname: localhost
+    ports:
+      - 2135:2135
+      - 2136:2136
+      - 8765:8765
+      - 9092:9092
+    volumes:
+      - ./ydb_certs:/ydb_certs
+      - ./ydb_data:/ydb_data
+    environment:
+      - GRPC_TLS_PORT=2135
+      - GRPC_PORT=2136
+      - MON_PORT=8765
+      - YDB_KAFKA_PROXY_PORT=9092

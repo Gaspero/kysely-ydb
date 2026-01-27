@@ -7,45 +7,38 @@ This repo is currently WIP (Work in process) and thus is not production ready.
 
 For now on, it only provides capabilities of basic select queries against YDB and does not support some dialect-specific expressions.
 
-## Installation 
+Types are mapped in accordance with @ydbjs/value [implementation](https://github.com/ydb-platform/ydb-js-sdk/blob/main/packages/value/README.md#type-conversion-details).
+
+## Installation
 ```
 npm i kysely-ydb
 ```
 
 ## Example usage
-```
-import { Kysely } from 'kysely';
-import {Driver, getSACredentialsFromJson, IamAuthService} from 'ydb-sdk';
-
-import { YdbDialect } from 'kysely-ydb';
+```typescript
+import { Driver } from '@ydbjs/core'
+import { Kysely } from 'kysely'
+import { YdbDialect } from 'kysely-ydb'
 
 interface UserTable {
-  id: string;
-  name?: string;
-  email?: string;
-  email_verified?: Date;
-  image?: string;
+  id: string
+  name?: string
+  email?: string
+  email_verified?: Date
+  image?: string
 }
 
 interface Database {
   users: UserTable
 }
 
-const YDB_ENDPOINT = 'grpcs://ydb.serverless.yandexcloud.net:2135';
-const YDB_DB = '/ru-central1/{YOUR_DB}';
+const YDB_ENDPOINT = 'grpcs://localhost:2135/local'
 
-const saCredentials = getSACredentialsFromJson('key.json');
-const authService = new IamAuthService(saCredentials);
-const driver = new Driver({
-    endpoint: YDB_ENDPOINT,
-    database: YDB_DB,
-    authService: authService
-
-});
+const driver = new Driver(YDB_ENDPOINT)
 
 const db = new Kysely<Database>({
   dialect: new YdbDialect({
-    driver: driver
+    driver,
   }),
 })
 
@@ -55,5 +48,4 @@ export async function run() {
 }
 
 run()
-
 ```
