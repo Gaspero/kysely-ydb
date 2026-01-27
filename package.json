@@ -1,7 +1,7 @@
 {
   "name": "kysely-ydb",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "packageManager": "pnpm@10.25.0",
   "description": "Kysely dialects, plugins and other goodies for YDB",
   "author": "Ivan Shadrin",
