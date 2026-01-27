@@ -106,7 +106,7 @@ class YdbConnection implements DatabaseConnection {
       }
     }
     catch (err) {
-      throw extendStackTrace(err, new Error('ne schmogla'))
+      throw extendStackTrace(err, new Error('unable to execute query:'))
     }
   }
 
